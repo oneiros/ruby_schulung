@@ -26,6 +26,7 @@ David Roetzel &lt;training@roetzel.de&gt;
 *   Theorie/Praxis gemischt
 *   Bitte viel fragen!
 *   Schulungsnotebooks mit Ubuntu Linux
+*   Handout und Bücher
 *   Texteditor Eurer Wahl
 
 !SLIDE
@@ -130,7 +131,7 @@ puts "Hello World"
 
 !SLIDE 
 
-Anweisungen
+## Anweisungen
 
 *   Eine pro Zeile:
 
@@ -266,15 +267,15 @@ true.class      # TrueClass
 
 ## "Globale" Methoden
 
-* Ruby stellt immer einen Standard-Kontext bereit, in dem bestimmte Methoden immer existent sind
-* Z.B. Basis-Methoden für die Ein- und Ausgabe auf der Konsole:
+*   Ruby stellt einen Standard-Kontext bereit, in dem bestimmte Methoden immer existent sind
+*   Z.B. Basis-Methoden für die Ein- und Ausgabe auf der Konsole:
 
 ~~~~ruby
 puts "test" # Zeile ausgeben 
 test = gets # Zeile einlesen
 print "a"   # Kein Umbruch
 p "a"       # puts "a".inspect
-~~~~ 
+~~~~
 
 !SLIDE
 
@@ -419,8 +420,8 @@ puts add(3,5)
 
 *   Schreibt eine hello-world-Methode, die einen personalisierten
     Gruß ausgibt. Dazu soll ein Parameter "name" übergeben werden.
-    Anschließend soll der Gruß "Hallo <name>" ausgegeben werden,
-    wobei <name> durch den übergebenen Namen ersetzt wird.
+    Anschließend soll der Gruß "Hallo &lt;name&gt;" ausgegeben werden,
+    wobei &lt;name&gt; durch den übergebenen Namen ersetzt wird.
 *   Schreibt eine Methode, um Quadratzahlen zu berechnen. Als
     Parameter soll eine Zahl übergeben werden. Rückgabewert soll
     das Quadrat der Zahl sein.
@@ -717,7 +718,7 @@ twice { puts "hallo" }
 !SLIDE
 
 ## Adressdatenbank 1
- 
+
 Schreibt eine Adressdatenbank. Das Programm soll Adressen, die
 mindestens Name, Straße und Ort enthalten im Hauptspeicher
 ablegen und wieder verfügbar machen.
@@ -736,8 +737,7 @@ Darstellung soll nur den Index und den Namen enthalten.
 Bei Eingabe eines gültigen Index wird der passende Datensatz
 vollständig angezeigt.
 
-Zusätzlich soll die Möglichkeit gewährt werden, das Programm
-zu beenden.
+Zusätzlich soll es möglich sein, das Programm zu beenden.
 
 !SLIDE
 
@@ -845,7 +845,7 @@ match_data.post_match # "lo"
 
 ~~~~ruby
 /[a-z][a-zA-Z0-9_]*(\?|!)?/
-~~~~ 
+~~~~
 
 !SLIDE
 
@@ -942,7 +942,7 @@ match_data.captures # ["23", "Januar", "2014"]
 
 !SLIDE
 
-## Benannten Gruppen
+## Benannte Gruppen
 
 ~~~~ruby
 exp = /(?<day>\d{1,2}). (?<month>\w+) (?<year>\d{2,4})/
@@ -995,8 +995,8 @@ date.scan(/\d+/) {|match| puts match}
 ## Rubular
 
 *   [www.rubular.com](http://www.rubular.com)
-*   Schnelles Ausprobieren von (Ruby-)Regular Expressions 
- 
+*   Schnelles Ausprobieren von (Ruby-)Regular Expressions
+
 !SLIDE
 
 # Praxis
@@ -1372,7 +1372,7 @@ end 
 ## Vererbung - Beispiel
 
 ~~~~ruby
-class Rechteck
+class Rectangle
   def initialize(width, height)
     @width = width
     @heigth = height
@@ -1380,7 +1380,7 @@ class Rechteck
   def area ; @width * @height ; end
 end
 
-class Quadrat
+class Square
   def initialize(width)
     super(width, width)
   end
@@ -1391,15 +1391,9 @@ end
 
 ## Zugriffschutz
 
-*   public (implizit)\
-    immer aufrufbar 
-
-*   protected (Schlüsselwort)\
-    Nur aufrufbar, wenn Empfänger die selbe Klasse hat wie "self" 
-
-*   private (Schlüsselwort)\
-    Nur auf implizitem self aufrufbar (also nur innerhalb der selben
-    Klasse) 
+*   **public** (implizit): immer aufrufbar
+*   **protected** (Schlüsselwort) : Nur aufrufbar, wenn Empfänger die selbe Klasse hat wie "self"
+*   **private** (Schlüsselwort) : Nur auf implizitem self aufrufbar (also nur innerhalb der selben Klasse)
 
 !SLIDE
 
@@ -1500,6 +1494,8 @@ end
 # Praxis
 
 !SLIDE
+
+## Kaffeemaschine mit Exceptions
 
 Entfernt alle interaktiven Elemente (puts, gets) aus der
 Klasse Kaffeemaschine. Ersetzt Ausgaben durch Rückgabewerte
@@ -1715,6 +1711,8 @@ end
 
 Schreibt Tests für Eure Kaffeemaschine.
 
+!SLIDE
+
 ## Code Coverage
 
 *   Was ist ein guter Test? 
@@ -1886,6 +1884,7 @@ end
 *   gem install \<paketname\> 
 *   unzählige Pakete verfügbar 
 *   rubygems.org 
+*   ruby-toolbox.com
 
 !SLIDE 
 
@@ -1895,7 +1894,8 @@ end
 *   Gemfile 
 *   bundle install 
 *   Lockfile 
-*   in der Anwendung:\
+*   in der Anwendung:
+
     require "bundler/setup" 
 
 !SLIDE 
