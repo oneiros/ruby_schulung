@@ -1,9 +1,9 @@
 !SLIDE
 
-# Programmieren mit Ruby
+# Programm-ieren mit Ruby
 
-Linuxhotel, Juni 2012
-David Roetzel &lt;training@roetzel.de&gt;
+Linuxhotel, Juni 2013
+David Roetzel <training@roetzel.de>
 
 !SLIDE
 
@@ -430,7 +430,7 @@ puts add(3,5)
 
 !SLIDE
 
-# Kontrollstrukturen
+# Kontroll-strukturen
 
 !SLIDE
 
@@ -701,7 +701,7 @@ frame { "zufall#{rand(1009)}" }
 
 !SLIDE
 
-## Code Block als Objekte 2
+## Code Blocks als Objekte 2
 
 ~~~~ruby
 def twice(&block)
@@ -1151,7 +1151,7 @@ t.to\_i      # Sekunden seit 01.01.1970 
 
 !SLIDE 
 
-# Objektorientierung
+# Objekt-orientierung
 
 !SLIDE
 
