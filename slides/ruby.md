@@ -420,12 +420,13 @@ puts add(3,5)
 
 *   Schreibt eine hello-world-Methode, die einen personalisierten
     Gruß ausgibt. Dazu soll ein Parameter "name" übergeben werden.
-    Anschließend soll der Gruß "Hallo &lt;name&gt;" ausgegeben werden,
-    wobei &lt;name&gt; durch den übergebenen Namen ersetzt wird.
+    Anschließend soll der Gruß "Hallo <name>" ausgegeben werden,
+    wobei <name> durch den übergebenen Namen ersetzt wird.
 *   Schreibt eine Methode, um Quadratzahlen zu berechnen. Als
     Parameter soll eine Zahl übergeben werden. Rückgabewert soll
     das Quadrat der Zahl sein.
-    Schreibt einen Aufruf der Methode, der die Funktionsweise
+
+Schreibt jeweils einen Aufruf der Methode, der die Funktionsweise
     testet und das Ergebnis auf der Konsole ausgibt.
 
 !SLIDE
@@ -677,7 +678,7 @@ def benchmark
 end 
 
 benchmark do
-  1000000.times { "23000".to_s }
+  1000000.times { "23000".to_i }
 end
 ~~~~
 
@@ -852,7 +853,7 @@ match_data.post_match # "lo"
 ## Bereichsmarkierungen
 
 *   Zeilenanfang: \^ 
-*   Zeilenende: \$ 
+*   Zeilenende: $ 
 *   Stringanfang: \\A 
 *   Stringende: \\Z 
 
@@ -930,7 +931,7 @@ $2                     # o 
 ## Capturing OO-Style
 
 ~~~~ruby
-date_exp = /(\d{1,2}). (\w+) (\d{2,4})/
+date_exp = /(\d{1,2})\. (\w+) (\d{2,4})/
 date_string = "23. Januar 2014"
 match_data = date_exp.match(date_string)
 
@@ -1086,7 +1087,7 @@ File.open("test.txt", "w") do |file|
   file.puts "Hallo"
 end
 ~~~~
- 
+
 *   "r"ead, "w"rite, "a"ppend (, "b"inary) 
 
 !SLIDE
@@ -1138,7 +1139,7 @@ t.year       # 2013
 
 t + 60       # 2013-05-27 18:22:04 +0200
 
-t.to\_i      # Sekunden seit 01.01.1970 
+t.to_i      # Sekunden seit 01.01.1970 
 ~~~~
 
 !SLIDE
@@ -1375,12 +1376,12 @@ end 
 class Rectangle
   def initialize(width, height)
     @width = width
-    @heigth = height
+    @height = height
   end
   def area ; @width * @height ; end
 end
 
-class Square
+class Square < Rectangle
   def initialize(width)
     super(width, width)
   end
@@ -1627,7 +1628,7 @@ end
 *   assert\_kind\_of 
 *   assert\_nil 
 *   refute\_nil 
-*   assert\_raise 
+*   assert\_raises
 *   assert\_match 
 
 !SLIDE
@@ -2059,7 +2060,7 @@ end
 
 *   why's poignant guide 
 *   Pickaxe Book
-*   Eloquent Ruby von Peter Cooper 
+*   Eloquent Ruby von Russ Olsen 
 *   The Ruby Programming Language von David Flanagan und Yukihiro
     Matsumoto 
 *   www.ruby-lang.org, www.ruby-doc.org 
