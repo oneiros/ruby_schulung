@@ -2,8 +2,8 @@
 
 # Programm-ieren mit Ruby
 
-Linuxhotel, Juni 2013
-David Roetzel <training@roetzel.de>
+Nürnberg, November 2013
+David Roetzel &lt;training@roetzel.de&gt;
 
 !SLIDE
 
@@ -21,8 +21,7 @@ David Roetzel <training@roetzel.de>
 
 ## Die Schulung
 
-*   5 Tage
-*   2 Blöcke von 4h mit jeweils einer Pause
+*   5 volle Tage (mit Pausen)
 *   Theorie/Praxis gemischt
 *   Bitte viel fragen!
 *   Schulungsnotebooks mit Ubuntu Linux
@@ -420,14 +419,14 @@ puts add(3,5)
 
 *   Schreibt eine hello-world-Methode, die einen personalisierten
     Gruß ausgibt. Dazu soll ein Parameter "name" übergeben werden.
-    Anschließend soll der Gruß "Hallo <name>" ausgegeben werden,
-    wobei <name> durch den übergebenen Namen ersetzt wird.
+    Anschließend soll der Gruß "Hallo &lt;name&gt;" ausgegeben werden,
+    wobei &lt;name&gt; durch den übergebenen Namen ersetzt wird.
 *   Schreibt eine Methode, um Quadratzahlen zu berechnen. Als
     Parameter soll eine Zahl übergeben werden. Rückgabewert soll
     das Quadrat der Zahl sein.
 
 Schreibt jeweils einen Aufruf der Methode, der die Funktionsweise
-    testet und das Ergebnis auf der Konsole ausgibt.
+testet und das Ergebnis auf der Konsole ausgibt.
 
 !SLIDE
 
@@ -1024,21 +1023,15 @@ erfolgen, sondern eine Fehlermeldung ausgegeben werden.
 
 !SLIDE
 
-# Praxis
+## Umgebungsvariablen
 
-!SLIDE
+* Umgebungsvariablen landen in der Konstanten ENV
+* ENV enthält einen Hash
+* Beispiel:
 
-## Taschenrechner, die dritte
-
-Schreibt den Taschenrechner so um, dass die Eingabe nicht mehr
-interaktiv erfolgt, sondern über Kommandozeilenparameter.
-
-So soll der Aufruf des Programms mit den Parametern "1 + 5"
-z.B. die Zahlen 1 und 5 addieren.
-
-Die Ausgabe des Ergebnisses soll unmittelbar auf die Standard-
-Ausgabe erfolgen. Das Programm ist danach fertig und wird
-automatisch beendet.
+~~~~ruby
+ENV["HOME"] # "/home/dave"
+~~~~
 
 !SLIDE
 
@@ -1723,23 +1716,6 @@ Schreibt Tests für Eure Kaffeemaschine.
 
 !SLIDE
 
-## Ruby-Debugger
-
-*   gem install debugger 
-*   Skript debuggen: rdebug skript.rb 
-*   Debugger aus Anwendung aufrufen:
-
-~~~~ruby
-require "debugger"
-#...
-debugger 
-~~~~
-
-*   Ausdrücke evaluieren 
-*   Kommandobsp.: list, where, step, next, break 
-
-!SLIDE
-
 ## Core vs. Stdlib
 
 *   Klassen aus Core stehen immer zur Verfügung 
@@ -1923,6 +1899,244 @@ end
 Erstellt ein ausführbares Programm, dass Eure Kaffeemachine interaktiv benutzbar macht.
 
 Paketiert diese Datei, die Kaffeemaschine und Eure Tests als Gem.
+
+!SLIDE
+
+# Ruby und LDAP
+
+!SLIDE
+
+## Low-level Bibliotheken
+
+* ruby-ldap bietet Ruby-Bindings u.a. zur OpenLDAP-C-Bibliothek
+* net-ldap ist eine reine Ruby-Bibliothek
+* Performance vs. Portabilität
+
+!SLIDE
+
+## net-ldap
+
+~~~~ruby
+require "net/ldap"
+
+ldap = Net::LDAP.new(
+  host: 'localhost',
+  port: 389,
+  auth: {
+    method: :simple,
+    username: 'cn=admin,dc=example,dc=com',
+    password: 'ldap23'
+  }
+)
+~~~~
+
+!SLIDE
+
+## Authentifizieren
+
+~~~~ruby
+ldap.bind # => true oder false
+~~~~
+
+!SLIDE
+
+## Suchen
+
+~~~~ruby
+filter = Net::LDAP::Filter.eq("cn", "admi*")
+treebase = "dc=example, dc=com"
+
+ldap.search(base: treebase, filter: filter) do |entry|
+  puts entry.dn
+end
+
+ldap.search(base: treebase, filter: filter) # => Array
+~~~~
+
+!SLIDE
+
+## Filter
+
+* Objekte, die LDAP-Filterausdrücke repräsentieren
+* Klassenmethoden von Net::LDAP::Filter
+* begins, contains, ends, eq, equals, ge, le, ne, present?
+* Kombination mit Hilfe von Operatoren:
+
+~~~~ruby
+filter1 = Net::LDAP::Filter.eq("cn", "admi*")
+filter2 = Net::LDAP::Filter.present?("email")
+filter3 = filter1 & filter2
+~~~~
+
+!SLIDE
+
+## Einträge
+
+~~~~ruby
+entry.class # Net::LDAP::Entry
+entry.attribute_names
+# [:dn, :objectclass, :cn, :description, :userpassword]
+
+entry.cn # ["admin"]
+entry[:cn] # ["admin"]
+
+entry.each do |attribute, values|
+  puts attribute
+end
+~~~~
+
+!SLIDE
+
+## Einträge hinzufügen
+
+~~~~ruby
+dn = "ou=People,dc=example,dc=com"
+attributes = {
+  ou: 'People',
+  objectclass: 'organizationalUnit'
+}
+
+ldap.add(dn: dn, attributes: attributes)
+~~~~
+
+!SLIDE
+
+## Einträge bearbeiten
+
+~~~~ruby
+dn = "cn=Otto Mustermann,ou=People,dc=example,dc=com"
+
+ldap.add_attribute(dn, :mail, "om@example.com")
+
+ldap.replace_attribute(dn, :sn, "Musterfrau")
+
+ldap.delete_attribute(dn, :homephone)
+~~~~
+
+!SLIDE
+
+# Praxis
+
+!SLIDE
+
+## Zufallsdaten anlegen
+
+Legt 20 Personendatensätze in Eurem Verzeichnis an.
+
+Die Namen sollen zufällig aus einer Reihe von Vor- und Nachnamen zusammengesetzt werden. Die Nachnamen sollen mindestens Müller, Schneider und Weber sein.
+
+Der cn soll aus erstem Buchstaben des Vornamens, aus dem Nachnamen und nötigenfalls einer Zahl bestehen.
+
+Am Ende soll das Skript die Anzahl aller Personen mit dem Nachnamen Müller ausgeben.
+
+!SLIDE
+
+## ActiveLDAP
+
+* High-Level Bibliothek
+* Objekt-orientierte Abstraktion für Einträge
+* Geringere Performance
+* Angelehnt an ActiveRecord
+
+!SLIDE
+
+## Setup
+
+~~~~ruby
+require "active_ldap"
+
+ActiveLdap::Base.setup_connection(
+  host: 'localhost',
+  port: 389,
+  base: 'dc=example,dc=com',
+  bind_dn: 'cn=admin,dc=example,dc=com',
+  password: 'ldap23'
+)
+~~~~
+
+!SLIDE
+
+## Einträge
+
+~~~~ruby
+class People < ActiveLdap::Base
+  ldap_mapping
+end
+
+People.find(:first)
+~~~~
+
+!SLIDE
+
+## Mapping konfigurieren
+
+~~~~ruby
+class Person < ActiveLdap::Base
+  ldap_mapping dn_attribute: 'cn',
+    prefix: 'ou=People',
+    classes: ['top', 'inetOrgPerson'],
+    scope: :one
+end
+~~~~
+
+!SLIDE
+
+## Suchen
+
+~~~~ruby
+Person.find(:all, attribute: 'sn', value: 'Müller')
+
+Person.find(:all, filter: '(sn=Müller)')
+~~~~
+
+!SLIDE
+
+## Eintrag anlegen und bearbeiten 
+
+~~~~ruby
+otto = Person.new
+otto.sn = "Mustermann"
+otto.given_name = "Otto"
+otto.cn = "Otto Mustermann"
+otto.save
+
+otto.sn = "Musterfrau"
+otto.save
+
+otto.destroy
+~~~~
+
+!SLIDE
+
+## Callbacks
+
+~~~~ruby
+class Person < ActiveLdap::Base
+  ldap_mapping # ...
+  before_validation :setup_cn
+
+  private
+
+  def setup_cn
+    self.cn = "#{given_name} #{sn}"
+  end
+end
+~~~~
+
+!SLIDE
+
+# Praxis
+
+!SLIDE
+
+## LDAP-Backend für Adressdatenbank
+
+Kopiert Eure Adressdatenbank, aber nutzt jetzt ActiveLdap,
+um die Adressen im LDAP-Verzeichnis zu speichern.
+
+!SLIDE
+
+## CSV-Import in LDAP
 
 !SLIDE
 
