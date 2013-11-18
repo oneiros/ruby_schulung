@@ -35,7 +35,7 @@ David Roetzel &lt;training@roetzel.de&gt;
 *   Montag: Einführung, Grundlagen 
 *   Dienstag: Fortsetzung Grundlagen, Klassenbibliothek 
 *   Mittwoch: Objektorientierung 
-*   Donnerstag: Stdlib, Rubygems, Sinatra
+*   Donnerstag: Stdlib, Rubygems, LDAP
 *   Freitag: nach Absprache
 
 !SLIDE
@@ -1536,7 +1536,7 @@ s = MusicPlayer::Song.new 
 
 *   Vererbung passt logisch nicht immer
 *   Bsp: Tisch, Stuhl und User wollen alle loggen, User ist aber kein Möbelstück
-*   Resultat sind oft riesiege Vererbungsbäume
+*   Resultat sind oft riesige Vererbungsbäume
 *   Statt dessen Mixins: Funktionalität in Klassen hinzuladen
 *   Beliebig viele Mixins können pro Klasse inkludiert werden
 
