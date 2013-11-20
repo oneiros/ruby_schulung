@@ -2,7 +2,7 @@
 
 # Programm-ieren mit Ruby
 
-Nürnberg, November 2013
+Linuxhotel, November 2013
 David Roetzel &lt;training@roetzel.de&gt;
 
 !SLIDE
@@ -527,7 +527,7 @@ den beiden Zahlen durchführen und das Ergebnis ausgeben.
 
 ~~~~ruby
 i = 10
-while i >= 0 do
+while i >= 0
   puts "Countdown: #{i}"
   i -= 1
 end 
@@ -902,6 +902,12 @@ match_data.post_match # "lo"
 *   x für das entfernen von Whitespace 
 *   o dafür, Ersetzungen nur einmal vorzunehmen
 *   Darüberhinaus weitere für Encoding
+
+!SLIDE
+
+## Beispiel
+
+*   Autokennzeichen
 
 !SLIDE
 
@@ -1716,6 +1722,15 @@ Schreibt Tests für Eure Kaffeemaschine.
 
 !SLIDE
 
+## Debugging
+
+*   Skript debuggen: ruby -rdebug skript.rb 
+*   Ausdrücke evaluieren mit p 
+*   Kommandobsp.: list, where, step, next, break, cont
+*   Alternativ: Gems debugger (für 1.9) und byebug (für 2.0) 
+
+!SLIDE
+
 ## Core vs. Stdlib
 
 *   Klassen aus Core stehen immer zur Verfügung 
@@ -1902,244 +1917,6 @@ Paketiert diese Datei, die Kaffeemaschine und Eure Tests als Gem.
 
 !SLIDE
 
-# Ruby und LDAP
-
-!SLIDE
-
-## Low-level Bibliotheken
-
-* ruby-ldap bietet Ruby-Bindings u.a. zur OpenLDAP-C-Bibliothek
-* net-ldap ist eine reine Ruby-Bibliothek
-* Performance vs. Portabilität
-
-!SLIDE
-
-## net-ldap
-
-~~~~ruby
-require "net/ldap"
-
-ldap = Net::LDAP.new(
-  host: 'localhost',
-  port: 389,
-  auth: {
-    method: :simple,
-    username: 'cn=admin,dc=example,dc=com',
-    password: 'ldap23'
-  }
-)
-~~~~
-
-!SLIDE
-
-## Authentifizieren
-
-~~~~ruby
-ldap.bind # => true oder false
-~~~~
-
-!SLIDE
-
-## Suchen
-
-~~~~ruby
-filter = Net::LDAP::Filter.eq("cn", "admi*")
-treebase = "dc=example, dc=com"
-
-ldap.search(base: treebase, filter: filter) do |entry|
-  puts entry.dn
-end
-
-ldap.search(base: treebase, filter: filter) # => Array
-~~~~
-
-!SLIDE
-
-## Filter
-
-* Objekte, die LDAP-Filterausdrücke repräsentieren
-* Klassenmethoden von Net::LDAP::Filter
-* begins, contains, ends, eq, equals, ge, le, ne, present?
-* Kombination mit Hilfe von Operatoren:
-
-~~~~ruby
-filter1 = Net::LDAP::Filter.eq("cn", "admi*")
-filter2 = Net::LDAP::Filter.present?("email")
-filter3 = filter1 & filter2
-~~~~
-
-!SLIDE
-
-## Einträge
-
-~~~~ruby
-entry.class # Net::LDAP::Entry
-entry.attribute_names
-# [:dn, :objectclass, :cn, :description, :userpassword]
-
-entry.cn # ["admin"]
-entry[:cn] # ["admin"]
-
-entry.each do |attribute, values|
-  puts attribute
-end
-~~~~
-
-!SLIDE
-
-## Einträge hinzufügen
-
-~~~~ruby
-dn = "ou=People,dc=example,dc=com"
-attributes = {
-  ou: 'People',
-  objectclass: 'organizationalUnit'
-}
-
-ldap.add(dn: dn, attributes: attributes)
-~~~~
-
-!SLIDE
-
-## Einträge bearbeiten
-
-~~~~ruby
-dn = "cn=Otto Mustermann,ou=People,dc=example,dc=com"
-
-ldap.add_attribute(dn, :mail, "om@example.com")
-
-ldap.replace_attribute(dn, :sn, "Musterfrau")
-
-ldap.delete_attribute(dn, :homephone)
-~~~~
-
-!SLIDE
-
-# Praxis
-
-!SLIDE
-
-## Zufallsdaten anlegen
-
-Legt 20 Personendatensätze in Eurem Verzeichnis an.
-
-Die Namen sollen zufällig aus einer Reihe von Vor- und Nachnamen zusammengesetzt werden. Die Nachnamen sollen mindestens Müller, Schneider und Weber sein.
-
-Der cn soll aus erstem Buchstaben des Vornamens, aus dem Nachnamen und nötigenfalls einer Zahl bestehen.
-
-Am Ende soll das Skript die Anzahl aller Personen mit dem Nachnamen Müller ausgeben.
-
-!SLIDE
-
-## ActiveLDAP
-
-* High-Level Bibliothek
-* Objekt-orientierte Abstraktion für Einträge
-* Geringere Performance
-* Angelehnt an ActiveRecord
-
-!SLIDE
-
-## Setup
-
-~~~~ruby
-require "active_ldap"
-
-ActiveLdap::Base.setup_connection(
-  host: 'localhost',
-  port: 389,
-  base: 'dc=example,dc=com',
-  bind_dn: 'cn=admin,dc=example,dc=com',
-  password: 'ldap23'
-)
-~~~~
-
-!SLIDE
-
-## Einträge
-
-~~~~ruby
-class People < ActiveLdap::Base
-  ldap_mapping
-end
-
-People.find(:first)
-~~~~
-
-!SLIDE
-
-## Mapping konfigurieren
-
-~~~~ruby
-class Person < ActiveLdap::Base
-  ldap_mapping dn_attribute: 'cn',
-    prefix: 'ou=People',
-    classes: ['top', 'inetOrgPerson'],
-    scope: :one
-end
-~~~~
-
-!SLIDE
-
-## Suchen
-
-~~~~ruby
-Person.find(:all, attribute: 'sn', value: 'Müller')
-
-Person.find(:all, filter: '(sn=Müller)')
-~~~~
-
-!SLIDE
-
-## Eintrag anlegen und bearbeiten 
-
-~~~~ruby
-otto = Person.new
-otto.sn = "Mustermann"
-otto.given_name = "Otto"
-otto.cn = "Otto Mustermann"
-otto.save
-
-otto.sn = "Musterfrau"
-otto.save
-
-otto.destroy
-~~~~
-
-!SLIDE
-
-## Callbacks
-
-~~~~ruby
-class Person < ActiveLdap::Base
-  ldap_mapping # ...
-  before_validation :setup_cn
-
-  private
-
-  def setup_cn
-    self.cn = "#{given_name} #{sn}"
-  end
-end
-~~~~
-
-!SLIDE
-
-# Praxis
-
-!SLIDE
-
-## LDAP-Backend für Adressdatenbank
-
-Kopiert Eure Adressdatenbank, aber nutzt jetzt ActiveLdap,
-um die Adressen im LDAP-Verzeichnis zu speichern.
-
-!SLIDE
-
-## CSV-Import in LDAP
-
-!SLIDE
-
 ## Webanwendungen mit Sinatra
 
 *   Simpler Ansatz, Webanwendungen mit Ruby zu entwickeln
@@ -2166,24 +1943,42 @@ end
 
 !SLIDE
 
-## Sinatra-Anwendung
+## Templates
 
 ~~~~ruby
-require "sinatra/base"
-
-class MyApp < Sinatra::Base
-
-  get '/' do
-    "Willkommen"
-  end
-
+get '/now' do
+  @now = Time.now
+  erb :now
 end
-MyApp.run!
+~~~~
+
+~~~~html
+<p>Current time: <%= @now %></p>
 ~~~~
 
 !SLIDE
 
-## Templates
+## Layouts
+
+*   Layouts sind Templates, die ein yield enthalten
+*   Ideal für üblichen HTML-Rahmen, fixe Header und Footer
+*   Default: layout.erb für ERb-Templates
+*   Für jedes Template konfigurierbar
+
+!SLIDE
+
+## Parameter
+
+~~~~ruby
+post '/login' do
+  @username = params[:username]
+  erb :welcome
+end
+~~~~
+
+!SLIDE
+
+## Parameter in der URL
 
 ~~~~ruby
 get '/posts/:id' do |id|
@@ -2198,12 +1993,20 @@ end
 
 !SLIDE
 
-## Layouts
+## Sinatra-Anwendung
 
-*   Layouts sind Templates, die ein yield enthalten
-*   Ideal für üblichen HTML-Rahmen, fixe Header und Footer
-*   Default: layout.erb für ERb-Templates
-*   Für jedes Template konfigurierbar
+~~~~ruby
+require "sinatra/base"
+
+class MyApp < Sinatra::Base
+
+  get '/' do
+    "Willkommen"
+  end
+
+end
+MyApp.run!
+~~~~
 
 !SLIDE
 
@@ -2263,7 +2066,7 @@ end
 *   Konfigurationsmanagement: puppet, chef
 *   Projektmanagement: redmine
 *   Dokumente erzeugen: prawn, axlsx
-*   E-Mails: mail, mailman
+*   E-Mails: mail
 *   HTML/XML: nokogiri, builder
 *   Backup: backup
 *   Erweiterungen: active\_support
