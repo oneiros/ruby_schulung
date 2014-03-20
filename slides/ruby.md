@@ -1,9 +1,9 @@
 !SLIDE
 
-# Programm-ieren mit Ruby
+# Programmieren mit Ruby
 
 Linuxhotel, November 2013
-David Roetzel &lt;training@roetzel.de&gt;
+David Roetzel <training@roetzel.de>
 
 !SLIDE
 
@@ -35,7 +35,7 @@ David Roetzel &lt;training@roetzel.de&gt;
 *   Montag: Einführung, Grundlagen 
 *   Dienstag: Fortsetzung Grundlagen, Klassenbibliothek 
 *   Mittwoch: Objektorientierung 
-*   Donnerstag: Stdlib, Rubygems, LDAP
+*   Donnerstag: Stdlib, Rubygems, Sinatra
 *   Freitag: nach Absprache
 
 !SLIDE
@@ -1319,7 +1319,7 @@ end
 
 *   @@songs\_played ist eine Klassenvariable
 *   Existiert genau einmal pro Klasse (inkl. Unterklassen)
-*   Übergeordnetes Wissen: Ein einzelner Song **kann** und **muss** nicht wissen, wie viele Songs insgesamt schon gespielt wurden
+*   Übergeordnetes Wissen: Ein einzelner Song **kann** und **muss** nicht wissen, welche Songs bisher schon gespielt wurden
 
 !SLIDE
 
@@ -2079,7 +2079,8 @@ end
 *   Pickaxe Book
 *   Eloquent Ruby von Russ Olsen 
 *   The Ruby Programming Language von David Flanagan und Yukihiro
-    Matsumoto 
+    Matsumoto
+*   Ruby Weekly Newsletter
 *   www.ruby-lang.org, www.ruby-doc.org 
 *   und natürlich: üben, üben, üben 
 *   Ruby Koans
