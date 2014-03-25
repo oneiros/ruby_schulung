@@ -2,7 +2,7 @@
 
 # Programmieren mit Ruby
 
-Linuxhotel, November 2013
+Linuxhotel, März 2014 
 David Roetzel <training@roetzel.de>
 
 !SLIDE
@@ -78,7 +78,7 @@ David Roetzel <training@roetzel.de>
 *   Interpreter für JVM und .Net
 *   Rubymotion für iOS-Entwicklung
 *   Ruboto für Android
-*   Alpha: mruby zur Einbettung in andere Programme
+*   Neu: mruby zur Einbettung in andere Programme
 
 !SLIDE
 
@@ -370,7 +370,7 @@ add(3, 5) # 8
 
 !SLIDE
 
-## Benannte Parameter (Ruby 2.0)
+## Benannte Parameter (ab 2.0)
 
 ~~~~ruby
 def format_currency(amount: 0.0, currency: 'EUR')
@@ -1423,7 +1423,7 @@ end
 raise "Hier ist ein Fehler passiert" 
 
 # Eigene Exception-Typen
-class SongNotFoundException < Exception
+class SongNotFoundException < StandardError 
   def to_s ; "Song file not found" ; end
 end 
 
@@ -1727,7 +1727,7 @@ Schreibt Tests für Eure Kaffeemaschine.
 *   Skript debuggen: ruby -rdebug skript.rb 
 *   Ausdrücke evaluieren mit p 
 *   Kommandobsp.: list, where, step, next, break, cont
-*   Alternativ: Gems debugger (für 1.9) und byebug (für 2.0) 
+*   Alternativ: Gems debugger (für 1.9) und byebug (ab 2.0) 
 
 !SLIDE
 
@@ -1888,7 +1888,9 @@ end
 *   Lockfile 
 *   in der Anwendung:
 
-    require "bundler/setup" 
+~~~~ruby
+require "bundler/setup"
+~~~~~
 
 !SLIDE 
 
